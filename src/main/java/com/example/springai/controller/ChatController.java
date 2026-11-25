@@ -4,7 +4,9 @@ import com.example.springai.model.ActorFilms;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
@@ -19,7 +21,7 @@ public class ChatController {
         return null;
     }
 
-    @RequestMapping("/ask")
+    @GetMapping("/ask")
     public ChatResponse question(String text){
         return chatClient.prompt()
                 .user(text)
@@ -27,7 +29,7 @@ public class ChatController {
                 .chatResponse();
     }
 
-    @RequestMapping("/movies")
+    @GetMapping("/movies")
     public ActorFilms movieQuestion(){
 
         return chatClient.prompt()
@@ -36,7 +38,7 @@ public class ChatController {
                 .entity(ActorFilms.class);
     }
 
-    @RequestMapping("/stream")
+    @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> streamQuestion(String text){
 
         return chatClient.prompt()
